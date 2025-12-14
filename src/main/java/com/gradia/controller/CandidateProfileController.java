@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/candidates/profile")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('CANDIDATE')")
 @CrossOrigin(origins = "${cors.allowed-origins}")
 public class CandidateProfileController {
     
@@ -70,7 +72,8 @@ public class CandidateProfileController {
         }
     }
     
-    // Public endpoint - no authentication required
+    // Public endpoint - no authentication required (override class-level @PreAuthorize)
+    @PreAuthorize("permitAll()")
     @GetMapping("/{profileId}")
     public ResponseEntity<ApiResponse<Profile>> getProfile(@PathVariable UUID profileId) {
         try {

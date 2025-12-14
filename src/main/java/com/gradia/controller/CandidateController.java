@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,8 @@ public class CandidateController {
     
     private final CandidateService candidateService;
     
+    // Public endpoint - no authentication required
+    @PreAuthorize("permitAll()")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(
             @Valid @RequestBody CandidateRegisterRequest request) {
@@ -32,6 +35,8 @@ public class CandidateController {
         }
     }
     
+    // Public endpoint - no authentication required
+    @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(
             @Valid @RequestBody CandidateLoginRequest request) {
@@ -45,6 +50,7 @@ public class CandidateController {
     }
     
     
+    @PreAuthorize("hasRole('CANDIDATE')")
     @PostMapping("/profile")
     public ResponseEntity<ApiResponse<Profile>> createProfile(
             @Valid @RequestBody CandidateProfileRequest request,

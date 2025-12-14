@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,8 @@ public class EmployerController {
     private final EmployerProfileService employerProfileService;
     private final FileStorageService fileStorageService;
     
+    // Public endpoint - no authentication required
+    @PreAuthorize("permitAll()")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(
             @Valid @RequestBody EmployerRegisterRequest request) {
@@ -40,6 +43,8 @@ public class EmployerController {
         }
     }
     
+    // Public endpoint - no authentication required
+    @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(
             @Valid @RequestBody EmployerLoginRequest request) {
@@ -52,6 +57,7 @@ public class EmployerController {
         }
     }
     
+    @PreAuthorize("hasRole('EMPLOYER')")
     @PostMapping("/profile")
     public ResponseEntity<ApiResponse<EmployerProfile>> createProfile(
             @Valid @RequestBody EmployerProfileRequest request,
@@ -66,6 +72,7 @@ public class EmployerController {
         }
     }
     
+    @PreAuthorize("hasRole('EMPLOYER')")
     @PutMapping("/profile")
     public ResponseEntity<ApiResponse<EmployerProfile>> updateProfile(
             @Valid @RequestBody EmployerProfileRequest request,
@@ -81,6 +88,7 @@ public class EmployerController {
     }
     
     // Public endpoint - no authentication required
+    @PreAuthorize("permitAll()")
     @GetMapping("/profile/{profileId}")
     public ResponseEntity<ApiResponse<EmployerProfile>> getProfile(@PathVariable UUID profileId) {
         try {
@@ -92,6 +100,7 @@ public class EmployerController {
         }
     }
     
+    @PreAuthorize("hasRole('EMPLOYER')")
     @PostMapping(value = "/profile/upload/logo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<FileUploadResponse>> uploadCompanyLogo(
             @RequestParam("file") MultipartFile file,
@@ -128,6 +137,7 @@ public class EmployerController {
         }
     }
     
+    @PreAuthorize("hasRole('EMPLOYER')")
     @GetMapping("/profile/complete")
     public ResponseEntity<ApiResponse<Boolean>> checkProfileComplete(Authentication authentication) {
         try {

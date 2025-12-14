@@ -45,12 +45,20 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
+                // Public endpoints - no authentication required
                 .requestMatchers("/api/candidates/register", "/api/candidates/login").permitAll()
                 .requestMatchers("/api/employers/register", "/api/employers/login").permitAll()
-                .requestMatchers("/api/admin/**", "/h2-console/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
                 // Public profile endpoints - anyone can view profiles by profileId
                 .requestMatchers("GET", "/api/candidates/profile/{profileId}").permitAll()
                 .requestMatchers("GET", "/api/employers/profile/{profileId}").permitAll()
+                // Admin endpoints - require ADMIN role
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // Candidate endpoints - require CANDIDATE role
+                .requestMatchers("/api/candidates/**").hasRole("CANDIDATE")
+                // Employer endpoints - require EMPLOYER role
+                .requestMatchers("/api/employers/**").hasRole("EMPLOYER")
+                // All other requests require authentication
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))

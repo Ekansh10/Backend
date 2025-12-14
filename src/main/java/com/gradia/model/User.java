@@ -51,6 +51,7 @@ public class User {
     public enum UserRole {
         CANDIDATE,
         EMPLOYER,
+        ADMIN,
         SPONSOR
     }
 }
