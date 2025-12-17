@@ -16,7 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("permitAll()")
 @CrossOrigin(origins = "${cors.allowed-origins}")
 public class AdminController {
     

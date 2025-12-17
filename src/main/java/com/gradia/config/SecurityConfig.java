@@ -52,8 +52,11 @@ public class SecurityConfig {
                 // Public profile endpoints - anyone can view profiles by profileId
                 .requestMatchers("GET", "/api/candidates/profile/{profileId}").permitAll()
                 .requestMatchers("GET", "/api/employers/profile/{profileId}").permitAll()
-                // Admin endpoints - require ADMIN role
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // Public job endpoints - anyone can browse/search jobs
+                .requestMatchers("GET", "/api/jobs/**").permitAll()
+                .requestMatchers("GET", "/api/employers/jobs/{jobId}").permitAll()
+                // Admin endpoints - public access (no authentication required)
+                .requestMatchers("/api/admin/**").permitAll()
                 // Candidate endpoints - require CANDIDATE role
                 .requestMatchers("/api/candidates/**").hasRole("CANDIDATE")
                 // Employer endpoints - require EMPLOYER role
